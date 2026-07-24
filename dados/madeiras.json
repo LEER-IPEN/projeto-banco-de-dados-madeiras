@@ -1,53 +1,69 @@
 [
     {
-        "id": "FRXA-0000",
-        "filename": "150725ab - 220725ab",
+        "id": "FRXM-0000",
+        "filename": "110626av - 180626av",
         "tecnica": {
             "sigla": "FRX",
             "nome": "Espectroscopia de Fluorescência de Raios X"
         },
-        "nome": "Tinta Fluorescente Rosa Rosado",
-        "rotulo": "Tinta Fluorescente Rosa Rosado 1012 Corfix Acrílica",
-        "decada": "2010",
-        "medium": "Acrílica",
+        "nome": "Madeira Roxinho",
+        "rotulo": "Madeira Roxinho",
+        "decada": "Peltogyne paniculata",
+        "medium": "-9,299/-62,977",
         "elementos": {
             "Ag": {
                 "Majoritários": {
-                    "S": 43859,
-                    "Ti": 85445,
-                    "Ba": 93230
+                    "Ca": 19158,
+                    "Mn": 5272,
+                    "Fe": 15797,
+                    "Co": 3918,
+                    "Ni": 7154,
+                    "Cu": 6037,
+                    "Zn": 2636
                 },
                 "Traço": {
-                    "Fe": 1059,
-                    "Ni": 829,
-                    "Sr": 731
+                    "P": 992,
+                    "S": 908,
+                    "Cl": 1444,
+                    "Ti": 665,
+                    "Cr": 2084
                 }
             },
             "Rh": {
                 "Majoritários": {
-                    "S": 74631,
-                    "Ti": 154015,
-                    "Ba": 156938
+                    "Cl": 36691,
+                    "Ca": 70163,
+                    "Ti": 22743,
+                    "Mn": 12133,
+                    "Fe": 43351,
+                    "Co": 8439
                 },
                 "Traço": {
-                    "Ca": 2533,
-                    "Fe": 2969,
-                    "Sr": 1136
+                    "P": 703,
+                    "S": 2018,
+                    "Cr": 5643,
+                    "Ni": 8426,
+                    "Cu": 2875
                 }
             },
             "Au": {
                 "Majoritários": {
-                    "S": 9112,
-                    "Ti": 159366,
-                    "Ba": 199223
+                    "Ca": 41712,
+                    "Mn": 10638,
+                    "Fe": 15819,
+                    "Co": 9120,
+                    "Ni": 7792,
+                    "Cu": 4478,
+                    "Ga": 11185,
+                    "Se": 25490
                 },
                 "Traço": {
-                    "Cl": 788,
-                    "Ca": 910,
-                    "Fe": 1450,
-                    "Ni": 1092,
-                    "Zn": 1233,
-                    "Sr": 835
+                    "P": 724,
+                    "Cl": 607,
+                    "Ti": 1158,
+                    "Cr": 1639,
+                    "Zn": 2815,
+                    "As": 4177
                 }
             }
         },
@@ -58,4 +74,4 @@
             "Au": "dados/espectros/frx/auv/220725ab_auv.png"
         }
     }
-]   
+]
