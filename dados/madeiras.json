@@ -1,0 +1,61 @@
+[
+    {
+        "id": "FRXA-0000",
+        "filename": "150725ab - 220725ab",
+        "tecnica": {
+            "sigla": "FRX",
+            "nome": "Espectroscopia de Fluorescência de Raios X"
+        },
+        "nome": "Tinta Fluorescente Rosa Rosado",
+        "rotulo": "Tinta Fluorescente Rosa Rosado 1012 Corfix Acrílica",
+        "decada": "2010",
+        "medium": "Acrílica",
+        "elementos": {
+            "Ag": {
+                "Majoritários": {
+                    "S": 43859,
+                    "Ti": 85445,
+                    "Ba": 93230
+                },
+                "Traço": {
+                    "Fe": 1059,
+                    "Ni": 829,
+                    "Sr": 731
+                }
+            },
+            "Rh": {
+                "Majoritários": {
+                    "S": 74631,
+                    "Ti": 154015,
+                    "Ba": 156938
+                },
+                "Traço": {
+                    "Ca": 2533,
+                    "Fe": 2969,
+                    "Sr": 1136
+                }
+            },
+            "Au": {
+                "Majoritários": {
+                    "S": 9112,
+                    "Ti": 159366,
+                    "Ba": 199223
+                },
+                "Traço": {
+                    "Cl": 788,
+                    "Ca": 910,
+                    "Fe": 1450,
+                    "Ni": 1092,
+                    "Zn": 1233,
+                    "Sr": 835
+                }
+            }
+        },
+        "imagem": "dados/imagem-madeira/220725ab_agv.png",
+        "espectros": {
+            "Ag": "dados/espectros/frx/agv/220725ab_agv.png",
+            "Rh": "dados/espectros/frx/rhv/150725ab_rhv.png",
+            "Au": "dados/espectros/frx/auv/220725ab_auv.png"
+        }
+    }
+]   

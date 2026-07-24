@@ -1,0 +1,40 @@
+project:
+  type: website
+  output-dir: "docs"
+  resources:
+    - dados/**
+
+website:
+  favicon: assets/imgs/favicon.png
+  search: false
+  navbar:
+    logo: assets/imgs/logo.png
+    left:
+      - href: index.qmd
+        text: Início
+      - href: banco.qmd
+        text: Pesquisar Madeira
+      - href: about.qmd
+        text: Sobre
+      - href: contato.qmd
+        text: Contato
+    right:
+      - icon: github
+        href: https://github.com/LEER-IPEN/projeto-banco-de-dados-madeiras
+  page-footer:
+    center: 
+      "Copyright © 2026 Todos os direitos reservados por LEER - IPEN <br><br>  Projeto Banco de Dados de Madeiras Artísticas - Desenvolvido para pesquisa, ensino e conservação do patrimônio artístico."
+
+filters:
+  - carousel
+
+format:
+  html:
+    theme:
+      - lux
+      - brand
+    css: styles.css
+    lang: pt
+    toc: true
+
+
