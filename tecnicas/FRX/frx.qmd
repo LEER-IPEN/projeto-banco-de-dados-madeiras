@@ -1,0 +1,25 @@
+---
+title: ""
+pagetitle: "FRX"
+date: "2026-06-15"
+author: "José Vinicius Gonçalves"
+page-layout: full
+reading-time: true
+toc: true
+---
+
+:::: {.container-texto}
+
+# Sobre a Fluorescência de Raios - X
+
+<br>
+<div class="bloco-imagem">
+  <img src="/tecnicas/FRX/frx.jpeg" alt="FRX">
+  <p class="creditos-imagem">
+    Fonte: do autor
+  </p>
+</div>
+<br>
+
+A Fluorescência de Raios - X por Dispersão de Energia (FRXDE) é uma técnica não destrutiva utilizada para análise de uma ampla gama de amostras.
+::::

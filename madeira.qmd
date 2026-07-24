@@ -1,0 +1,726 @@
+---
+pagetitle: "Madeira"
+format: html
+page-layout: full
+execute: 
+  enabled: false
+---
+
+<div id="conteudo"></div>
+
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+<div id="modal-grafico" class="modal">
+  <span class="fechar">&times;</span>
+  <div id="grafico"></div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async function () {
+
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    const response = await fetch("dados/madeiras.json");
+    const madeiras = await response.json();
+
+    const coresResp = await fetch("dados/cores_elementos.json");
+    const coresElementos = await coresResp.json();
+
+    const madeira = madeiras.find(t => t.id === id);
+    const container = document.getElementById("conteudo");
+
+    const numeroAtomico = {
+      H:1, He:2, Li:3, Be:4, B:5, C:6, N:7, O:8, F:9, Ne:10, Na:11, Mg:12, Al:13, Si:14, P:15, S:16, Cl:17, 
+      Ar:18, K:19, Ca:20, Sc:21, Ti:22, V:23, Cr:24, Mn:25, Fe:26, Co:27, Ni:28, Cu:29, Zn:30, Ga:31, Ge:32, 
+      As:33, Se:34, Br:35, Kr:36, Rb:37, Sr:38, Y:39, Zr:40, Nb:41, Mo:42, Tc:43, Ru:44, Rh:45, Pd:46, Ag:47, 
+      Cd:48, In:49, Sn:50, Sb:51, Te:52, I:53, Xe:54, Cs:55, Ba:56, La:57, Ce:58, Pr:59, Nd:60, Pm:61, Sm:62, 
+      Eu:63, Gd:64, Tb:65, Dy:66, Ho:67, Er:68, Tm:69, Yb:70, Lu:71, Hf:72, Ta:73, W:74, Re:75, Os:76, Ir:77, 
+      Pt:78, Au:79, Hg:80, Tl:81, Pb:82, Bi:83, Po:84, At:85, Rn:86, Fr:87, Ra:88, Ac:89, Th:90, Pa:91, U:92, 
+      Np:93, Pu:94, Am:95, Cm:96, Bk:97, Cf:98, Es:99, Fm:100, Md:101, No:102, Lr:103, Rf:104, Db:105, Sg:106,
+      Bh:107, Hs:108, Mt:109, Ds:110, Rg:111, Cn:112, Nh:113, Fl:114, Mc:115, Lv:116, Ts:117, Og:118
+    }
+
+    function ordenarElementos(lista){
+      return lista.sort((a,b) => {
+        return (numeroAtomico[a] || 999) - (numeroAtomico[b] || 999)
+      })
+    }
+
+    // Função para gerar os Badges Majoritários com segurança
+    function renderizarMajoritarios(madeira) {
+      const listaRaw = [
+        ...Object.keys(madeira.elementos?.Ag?.Majoritários || {}),
+        ...Object.keys(madeira.elementos?.Rh?.Majoritários || {}),
+        ...Object.keys(madeira.elementos?.Au?.Majoritários || {})
+      ];
+      const elementos = ordenarElementos([...new Set(listaRaw)]);
+      
+      // Condicional sem usar símbolos que o Quarto possa converter
+      if (elementos.length === 0) {
+        return "-";
+      }
+      
+      return elementos.map(function(el) {
+        return '<span class="badge badge-maj">' + el + '</span>';
+      }).join('');
+    }
+
+    // Função para gerar os Badges de Traço com segurança
+    function renderizarTracos(madeira) {
+      const listaRaw = [
+        ...Object.keys(madeira.elementos?.Ag?.Traço || {}),
+        ...Object.keys(madeira.elementos?.Rh?.Traço || {}),
+        ...Object.keys(madeira.elementos?.Au?.Traço || {})
+      ];
+      const elementos = ordenarElementos([...new Set(listaRaw)]);
+      
+      if (elementos.length === 0) {
+        return "-";
+      }
+      
+      return elementos.map(function(el) {
+        return '<span class="badge badge-traco">' + el + '</span>';
+      }).join('');
+    }
+
+    // Função genérica e segura para criar Badges Majoritários por Alvo
+    function badgeAnaliticoMaj(madeira, alvo) {
+      const chaves = Object.keys(madeira.elementos?.[alvo]?.Majoritários || {});
+      const elementos = ordenarElementos(chaves);
+      
+      if (elementos.length === 0) {
+        return "-";
+      }
+      
+      return elementos.map(function(el) {
+        return '<span class="badge badge-maj">' + el + '</span>';
+      }).join('');
+    }
+
+    // Função genérica e segura para criar Badges de Traço por Alvo
+    function badgeAnaliticoTraco(madeira, alvo) {
+      const chaves = Object.keys(madeira.elementos?.[alvo]?.Traço || {});
+      const elementos = ordenarElementos(chaves);
+      
+      if (elementos.length === 0) {
+        return "-";
+      }
+      
+      return elementos.map(function(el) {
+        return '<span class="badge badge-traco">' + el + '</span>';
+      }).join('');
+    }
+
+    let botoesEspectro = "";
+    let conteudoEspectro = "";
+
+    if (!madeira) {
+      container.innerHTML = "<p>Madeira não encontrada.</p>";
+      return;
+    }
+
+    if (madeira.tecnica.sigla === "FRX" && madeira.espectros) {
+
+      botoesEspectro = `
+        <div class="tabs">
+          <span class="label-tabs">Selecione o tipo de alvo:</span>
+          <button class="tab-btn active" data-tab="graf1" data-tipo="Ag">Ag</button>
+          <button class="tab-btn" data-tab="graf2" data-tipo="Rh">Rh</button>
+          <button class="tab-btn" data-tab="graf3" data-tipo="Au">Au</button>
+        </div>
+      `;
+
+      conteudoEspectro = `
+        <div class="card-grafico">
+
+          <div class="cabecalho-grafico" id="titulo-grafico">
+            ${madeira.tecnica.nome} (${madeira.tecnica.sigla}) - Ag
+          </div>
+
+          <div class="conteudo-grafico active" id="graf1">
+            <div class="titulo-print">
+              ${madeira.tecnica.nome} (${madeira.tecnica.sigla}) - Ag
+            </div>
+            <div class="zoom-container">
+              <img src="${madeira.espectros[Object.keys(madeira.espectros)[0]]}" class="imagem-madeira">
+            </div>
+          </div>
+
+          <div class="conteudo-grafico" id="graf2">
+            <div class="titulo-print">
+              ${madeira.tecnica.nome} (${madeira.tecnica.sigla}) - Rh
+            </div>
+            <div class="zoom-container">
+              <img src="${madeira.espectros[Object.keys(madeira.espectros)[1]]}" class="imagem-madeira">
+            </div>
+          </div>
+
+          <div class="conteudo-grafico" id="graf3">
+            <div class="titulo-print">
+              ${madeira.tecnica.nome} (${madeira.tecnica.sigla}) - Au
+            </div>
+            <div class="zoom-container">
+              <img src="${madeira.espectros[Object.keys(madeira.espectros)[2]]}" class="imagem-madeira">
+            </div>
+          </div>
+
+        </div>
+      `;
+    } else {
+        const chaveEspectro = Object.keys(madeira.espectros)[0];
+        const caminhoImagem = madeira.espectros[chaveEspectro];
+
+        conteudoEspectro = `
+          <div class="card-grafico">
+
+            <div class="cabecalho-grafico" id="titulo-grafico">
+              ${madeira.tecnica.nome} (${madeira.tecnica.sigla})
+            </div>
+
+            <div class="conteudo-grafico active">
+              <div class="titulo-print">
+                ${madeira.tecnica.nome} (${madeira.tecnica.sigla})
+              </div>
+              <img src="${caminhoImagem}" class="imagem-madeira">
+            </div>
+
+          </div>
+        `;
+    }
+
+    container.innerHTML = `
+      <div class="watermark">LEER - IPEN</div>
+      
+      <div class="watermark-img">
+        <img src="assets/imgs/logo2.png">
+      </div>
+
+      <div class="top-bar">
+        <h1>${madeira.nome} - ${madeira.id}</h1>
+        <button onclick="window.print()" class="btn btn-success">
+          Download PDF
+        </button>
+      </div>
+
+      <h3 class="titulo-secao">Informações Gerais</h3>
+      <p style="text-align: justify;">
+        Aqui são apresentadas as informações da madeira analisada. Desta forma, estão dados como seu ID, que representa sua numeração dentro do Banco de Dados; 
+        seu Nome no rótulo da embalagem; a sua década pertencente; o Medium utilizado em sua confecção; e a técnica utilizada para sua análise. 
+        Clique em "Sobre esta Técnica" e entenda mais como este processo de análise é feito.
+      </p>
+      <div class="tabela-container">
+        <table class="tabela-dados">
+          <tr><th>ID</th><td>${madeira.id}</td></tr>
+          <tr>
+            <th>Nome no Rótulo</th>
+              <td>
+                ${madeira.rotulo}
+              </td>
+          </tr>
+          <tr><th>Década</th><td>${madeira.decada}</td></tr>
+          <tr><th>Medium</th><td>${madeira.medium}</td></tr>
+          <tr>
+            <th>Técnica</th><td>${madeira.tecnica.sigla} - ${madeira.tecnica.nome}</td>
+            <td>
+              <a href="tecnicas/FRX/frx.html" class="btn-tecnica">
+                <span class="icone-info">&#9432;</span>Sobre esta Técnica
+              </a>
+            </td>
+          </tr>
+        </table>
+
+        <h3 class="titulo-secao">Dados Sintetizados</h3>
+        <p style="text-align: justify;">
+          Aqui são apresentados os principais Elementos encontrados na madeira, separados em Majoritários e Traços. Ao clicar em "Detalhes", um gráfico de barras aparece
+          a fim de comparação, nele é mostrado a distribuição dos elementos encontrados com relação ao tipo de alvo de Raios - X utilizado: Ag - Prata, Rh - Ródio e Au - Ouro.
+        </p>
+        <table class="tabela-dados">
+          <tr class="center">
+            <td>Elementos Majoritários</td>
+            <td>
+              <div class="container-badges">
+                ${renderizarMajoritarios(madeira)}
+              </div>
+            </td>
+            <td>
+              <a href="#" class="btn-detalhes-2" data-tipo="Majoritários">Detalhes</a>
+            </td>
+          </tr>
+          <tr class="center">
+            <td>Elementos Traço</td>
+            <td>
+              <div class="container-badges">
+                ${renderizarTracos(madeira)}
+              </div>
+            </td>
+            <td>
+              <a href="#" class="btn-detalhes-2" data-tipo="Traço">Detalhes</a>
+            </td>
+          </tr>
+        </table>
+
+        <h3 class="titulo-secao">Dados Analíticos</h3>
+        <p style="text-align: justify;">
+          Aqui os principais Elementos encontrados na madeira para cada tipo de alvo de Raio - X utilizado (Ag - Prata, Rh - Ródio ou Au - Ouro) são mostrados, separados em Majoritários e Traços. Ao clicar em "Detalhes", um gráfico de pizza aparece com a distribuição dos elementos encontrados para Majoritários e para Traços.
+        </p>
+        <table class="tabela-dados">
+          <tr class="center">
+            <th rowspan="2">Ag</th>
+            <td>Elementos Majoritários</td>
+            <td>
+              <div class="container-badges">
+                ${badgeAnaliticoMaj(madeira, 'Ag')}
+              </div>
+            </td>
+            <td rowspan="2">
+              <a href="#" class="btn-detalhes" data-tipo="Ag">Detalhes</a>
+            </td>
+          </tr>
+          <tr class="center-bottom">
+            <td>Elementos Traço</td>
+            <td>
+              <div class="container-badges">
+                ${badgeAnaliticoTraco(madeira, 'Ag')}
+              </div>
+            </td>
+          </tr>
+
+          <tr class="center">
+            <th rowspan="2">Rh</th>
+            <td>Elementos Majoritários</td>
+            <td>
+              <div class="container-badges">
+                ${badgeAnaliticoMaj(madeira, 'Rh')}
+              </div>
+            </td>
+            <td rowspan="2">
+              <a href="#" class="btn-detalhes" data-tipo="Rh">Detalhes</a>
+            </td>
+          </tr>
+          <tr class="center-bottom">
+            <td>Elementos Traço</td>
+            <td>
+              <div class="container-badges">
+                ${badgeAnaliticoTraco(madeira, 'Rh')}
+              </div>
+            </td>
+          </tr>
+
+          <tr class="center">
+            <th rowspan="2">Au</th>
+            <td>Elementos Majoritários</td>
+            <td>
+              <div class="container-badges">
+                ${badgeAnaliticoMaj(madeira, 'Au')}
+              </div>
+            </td>
+            <td rowspan="2">
+              <a href="#" class="btn-detalhes" data-tipo="Au">Detalhes</a>
+            </td>
+          </tr>
+          <tr class="center-bottom">
+            <td>Elementos Traço</td>
+            <td>
+              <div class="container-badges">
+                ${badgeAnaliticoTraco(madeira, 'Au')}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <h3 class="titulo-graf only-print">Análise Gráfica Elementar</h3>
+      <div id="graficos-auto-pdf" class="only-print">
+        <p style="text-align: center; color: #888;" id="carregando-graficos-pdf">
+          Gerando gráficos para o relatório...
+        </p>
+      </div>
+
+      <h3 class="titulo-secao">Espectros</h3>
+      <p style="text-align: justify;">
+        Nesta área de espectros são apresentados os Espectros de Fluorescência de Raios - X analisados dos respectivos tipos de alvo utilizados: Ag - Prata, Rh - Ródio e Au - Ouro.
+        Clique e Selecione cada tipo abaixo.
+      </p>
+      <div class="area-graficos">
+        <div class="area-graficos">
+          ${botoesEspectro}
+          ${conteudoEspectro}
+        </div>
+      </div>
+    `;
+
+    if (madeira.tecnica.sigla === "FRX") {
+
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.addEventListener("click", function () {
+
+          document.querySelectorAll(".tab-btn")
+            .forEach(b => b.classList.remove("active"));
+
+          document.querySelectorAll(".conteudo-grafico")
+            .forEach(c => c.classList.remove("active"));
+
+          this.classList.add("active");
+
+          const alvo = document.getElementById(this.dataset.tab);
+          if (alvo) {
+            alvo.classList.add("active");
+          }
+
+          const titulo = document.getElementById("titulo-grafico");
+          titulo.textContent =
+            `${madeira.tecnica.nome} (${madeira.tecnica.sigla}) - ${this.dataset.tipo}`;
+
+        });
+      });
+    }
+    
+    document.addEventListener("click", function(e){
+
+      if(e.target.classList.contains("btn-detalhes")){
+        e.preventDefault()
+
+        const tipo = e.target.dataset.tipo
+
+        const modal = document.getElementById("modal-grafico")
+        const grafico = document.getElementById("grafico")
+
+        const maj = madeira.elementos[tipo].Majoritários || {}
+        const tr = madeira.elementos[tipo].Traço || {}
+
+        const somaMajBruta = Object.values(maj).reduce((a, b) => a + b, 0)
+        const somaTrBruta = Object.values(tr).reduce((a, b) => a + b, 0)
+        const totalGeralBruto = somaMajBruta + somaTrBruta 
+
+        const trPercent = totalGeralBruto > 0 ? (somaTrBruta / totalGeralBruto) * 100 : 0
+        const majPercent = 100 - trPercent
+
+        const majTotal = Object.values(maj).reduce((a, b) => a + b, 0) || 1
+        const majScaled = Object.values(maj).map(v => (v / majTotal) * majPercent)
+
+        const trValues = Object.values(tr)
+
+        const majLabels = [
+          ...Object.keys(maj),
+          "Traço"
+        ]
+
+        const majValues = [
+          ...majScaled,
+          trPercent
+        ]
+
+        const majColors = [
+          ...Object.keys(maj).map(el => coresElementos[el] || "#cccccc"),
+          "#82BBD8" 
+        ]
+
+        const trColors =
+          Object.keys(tr).map(el => coresElementos[el] || "#cccccc")
+
+        const data = [
+          {
+            type: "pie",
+            labels: majLabels,
+            values: majValues,
+            domain: { x: [0, 0.45] },
+            textinfo: "label+percent",
+            insidetextorientation: "horizontal",
+            name: "Majoritários",
+            marker: {
+              colors: majColors
+            },
+            pull: majLabels.map(l => l === "Traço" ? 0.12 : 0)
+          },
+          {
+            type: "pie",
+            labels: Object.keys(tr),
+            values: trValues, 
+            domain: { x: [0.70, 1] },
+            textinfo: "label+percent",
+            insidetextorientation: "horizontal",
+            name: "Traços",
+            marker: {
+              colors: trColors
+            }
+          }
+        ]
+
+        const layout = {
+          title: `Distribuição Elementar em ${[tipo]} - ${madeira.nome}`,
+          annotations: [
+            { text: "Elementos Majoritários", x: 0.09, y: 1.0, showarrow: false },
+            { text: "Elementos Traço", x: 0.95, y: 1.0, showarrow: false }
+          ],
+          showlegend: false
+        }
+
+        modal.style.display = "flex"
+        grafico.innerHTML = ""
+
+        Plotly.newPlot(grafico, data, layout)
+        Plotly.toImage(grafico, { format: 'png', width: 700, height: 400 })
+      }
+    })
+
+    document.addEventListener("click", function(e){
+
+      if(e.target.classList.contains("btn-detalhes-2")){
+        e.preventDefault()
+
+        const tipo = e.target.dataset.tipo
+
+        const modal = document.getElementById("modal-grafico")
+        const grafico = document.getElementById("grafico")
+
+        const Ag = madeira.elementos.Ag?.[tipo] || {}
+        const Rh = madeira.elementos.Rh?.[tipo] || {}
+        const Au = madeira.elementos.Au?.[tipo] || {}
+
+        const elementos = [...new Set([
+          ...Object.keys(Ag),
+          ...Object.keys(Rh),
+          ...Object.keys(Au)
+        ])]
+
+        const elementosOrdenados = ordenarElementos(elementos)
+
+        const totalAg = Object.values(Ag).reduce((a, b) => a + b, 0) || 1
+        const totalRh = Object.values(Rh).reduce((a, b) => a + b, 0) || 1
+        const totalAu = Object.values(Au).reduce((a, b) => a + b, 0) || 1
+
+        const valoresAg = elementosOrdenados.map(el => {
+          const valorBruto = Ag[el] || 0
+          return (valorBruto / totalAg) * 100 
+        })
+
+        const valoresRh = elementosOrdenados.map(el => {
+          const valorBruto = Rh[el] || 0
+          return (valorBruto / totalRh) * 100 
+        })
+
+        const valoresAu = elementosOrdenados.map(el => {
+          const valorBruto = Au[el] || 0
+          return (valorBruto / totalAu) * 100 
+        })
+
+        const data = [
+          {
+            type: "bar",
+            name: "Ag",
+            x: elementosOrdenados,
+            y: valoresAg
+          },
+          {
+            type: "bar",
+            name: "Rh",
+            x: elementosOrdenados,
+            y: valoresRh
+          },
+          {
+            type: "bar",
+            name: "Au",
+            x: elementosOrdenados,
+            y: valoresAu
+          }
+        ]
+
+        const layout = {
+          barmode: "group", 
+          title: `Comparação de Elementos ${[tipo]} - ${madeira.nome}`,
+          xaxis: { title: "Elemento" },
+          yaxis: { title: "%", range: [0, 100] } 
+        }
+
+        modal.style.display = "flex"
+        grafico.innerHTML = ""
+
+        Plotly.newPlot(grafico, data, layout)
+        Plotly.toImage(grafico, { format: 'png', width: 700, height: 400 })
+      }
+    })
+
+    document.querySelector(".fechar").onclick = function(){
+      document.getElementById("modal-grafico").style.display = "none"
+    }
+
+    document.addEventListener("keydown", function(e){
+      if(e.key === "Escape"){
+        document.getElementById("modal-grafico").style.display = "none"
+      }
+    })
+
+    document.getElementById("modal-grafico").addEventListener("click", function(e){
+      if(e.target.id === "modal-grafico"){
+        this.style.display = "none"
+      }
+    })
+
+    // ==========================================
+    // GERADOR AUTOMÁTICO DE GRÁFICOS PARA O PDF
+    // ==========================================
+    async function gerarGraficosParaPDF() {
+      const containerPdf = document.getElementById("graficos-auto-pdf");
+      if (!containerPdf) return; // Proteção caso o DOM não esteja montado
+
+      // Cria uma div temporária invisível para o Plotly renderizar em background
+      const tempDiv = document.createElement("div");
+      tempDiv.style.position = "absolute";
+      tempDiv.style.left = "-9999px";
+      tempDiv.style.width = "700px";
+      tempDiv.style.height = "400px";
+      document.body.appendChild(tempDiv);
+
+      let htmlImagens = "";
+
+      // 1. GRÁFICO DE BARRAS (Majoritários)
+      try {
+        const Ag = madeira.elementos.Ag?.Majoritários || {};
+        const Rh = madeira.elementos.Rh?.Majoritários || {};
+        const Au = madeira.elementos.Au?.Majoritários || {};
+        const elementos = [...new Set([...Object.keys(Ag), ...Object.keys(Rh), ...Object.keys(Au)])];
+        const elementosOrdenados = ordenarElementos(elementos);
+
+        const totalAg = Object.values(Ag).reduce((a, b) => a + b, 0) || 1;
+        const totalRh = Object.values(Rh).reduce((a, b) => a + b, 0) || 1;
+        const totalAu = Object.values(Au).reduce((a, b) => a + b, 0) || 1;
+
+        const dataBar1 = [
+          { type: "bar", name: "Ag", x: elementosOrdenados, y: elementosOrdenados.map(el => ((Ag[el] || 0) / totalAg) * 100) },
+          { type: "bar", name: "Rh", x: elementosOrdenados, y: elementosOrdenados.map(el => ((Rh[el] || 0) / totalRh) * 100) },
+          { type: "bar", name: "Au", x: elementosOrdenados, y: elementosOrdenados.map(el => ((Au[el] || 0) / totalAu) * 100) }
+        ];
+
+        await Plotly.newPlot(tempDiv, dataBar1, {
+          barmode: "group",
+          title: `Comparação de Elementos Majoritários - ${madeira.nome}`,
+          xaxis: { title: "Elemento" },
+          yaxis: { title: "%", range: [0, 100] }
+        });
+
+        const imgBarUrl1 = await Plotly.toImage(tempDiv, { format: 'png', width: 750, height: 380 });
+        htmlImagens += `
+          <div style="text-align: center; margin-bottom: 30px; page-break-inside: avoid;">
+            <img src="${imgBarUrl1}" style="max-width: 100%; height: auto; border: 1px solid #ccc; border-radius: 4px;">
+          </div>
+        `;
+      } catch (e) { console.error("Erro ao gerar gráfico de barras (Majoritários) para o PDF", e); }
+
+      // 2. GRÁFICO DE BARRAS (Traços)
+      try {
+        const Ag = madeira.elementos.Ag?.Traço || {};
+        const Rh = madeira.elementos.Rh?.Traço || {};
+        const Au = madeira.elementos.Au?.Traço || {};
+        const elementos = [...new Set([...Object.keys(Ag), ...Object.keys(Rh), ...Object.keys(Au)])];
+        const elementosOrdenados = ordenarElementos(elementos);
+
+        const totalAg = Object.values(Ag).reduce((a, b) => a + b, 0) || 1;
+        const totalRh = Object.values(Rh).reduce((a, b) => a + b, 0) || 1;
+        const totalAu = Object.values(Au).reduce((a, b) => a + b, 0) || 1;
+
+        const dataBar2 = [
+          { type: "bar", name: "Ag", x: elementosOrdenados, y: elementosOrdenados.map(el => ((Ag[el] || 0) / totalAg) * 100) },
+          { type: "bar", name: "Rh", x: elementosOrdenados, y: elementosOrdenados.map(el => ((Rh[el] || 0) / totalRh) * 100) },
+          { type: "bar", name: "Au", x: elementosOrdenados, y: elementosOrdenados.map(el => ((Au[el] || 0) / totalAu) * 100) }
+        ];
+
+        await Plotly.newPlot(tempDiv, dataBar2, {
+          barmode: "group",
+          title: `Comparação de Elementos Traço - ${madeira.nome}`,
+          xaxis: { title: "Elemento" },
+          yaxis: { title: "%", range: [0, 100] }
+        });
+
+        const imgBarUrl2 = await Plotly.toImage(tempDiv, { format: 'png', width: 750, height: 380 });
+        htmlImagens += `
+          <div style="text-align: center; margin-bottom: 30px; page-break-inside: avoid;">
+            <img src="${imgBarUrl2}" style="max-width: 100%; height: auto; border: 1px solid #ccc; border-radius: 4px;">
+          </div>
+        `;
+      } catch (e) { console.error("Erro ao gerar gráfico de barras (Traços) para o PDF", e); }
+
+      // 3. GRÁFICOS DE PIZZA (Um para cada alvo ativo)
+      const alvosDisponiveis = ["Ag", "Rh", "Au"];
+      for (const tipo of alvosDisponiveis) {
+        if (madeira.elementos[tipo]) {
+          try {
+            const maj = madeira.elementos[tipo].Majoritários || {};
+            const tr = madeira.elementos[tipo].Traço || {};
+
+            const somaMajBruta = Object.values(maj).reduce((a, b) => a + b, 0);
+            const somaTrBruta = Object.values(tr).reduce((a, b) => a + b, 0);
+            const totalGeralBruto = somaMajBruta + somaTrBruta;
+
+            const trPercent = totalGeralBruto > 0 ? (somaTrBruta / totalGeralBruto) * 100 : 0;
+            const majPercent = 100 - trPercent;
+
+            const majTotal = Object.values(maj).reduce((a, b) => a + b, 0) || 1;
+            const majScaled = Object.values(maj).map(v => (v / majTotal) * majPercent);
+
+            const majLabels = [...Object.keys(maj), "Traço"];
+            const majValues = [...majScaled, trPercent];
+            const majColors = [...Object.keys(maj).map(el => coresElementos[el] || "#cccccc"), "#82BBD8"];
+            const trColors = Object.keys(tr).map(el => coresElementos[el] || "#cccccc");
+
+            const dataPie = [
+              {
+                type: "pie", labels: majLabels, values: majValues, domain: { x: [0, 0.45] },
+                textinfo: "label+percent", insidetextorientation: "horizontal", name: "Majoritários", marker: { colors: majColors },
+                pull: majLabels.map(l => l === "Traço" ? 0.12 : 0)
+              },
+              {
+                type: "pie", labels: Object.keys(tr), values: Object.values(tr), domain: { x: [0.70, 1] },
+                textinfo: "label+percent", insidetextorientation: "horizontal", name: "Traços", marker: { colors: trColors }
+              }
+            ];
+
+            await Plotly.newPlot(tempDiv, dataPie, {
+              title: `Distribuição Elementar em ${tipo} - ${madeira.nome}`,
+              annotations: [
+                { text: "Elementos Majoritários", x: 0.05, y: 1.05, showarrow: false },
+                { text: "Elementos Traço", x: 0.95, y: 1.05, showarrow: false }
+              ],
+              showlegend: false
+            });
+
+            const imgPieUrl = await Plotly.toImage(tempDiv, { format: 'png', width: 750, height: 380 });
+            htmlImagens += `
+              <div style="text-align: center; margin-bottom: 30px; page-break-inside: avoid;">
+                <img src="${imgPieUrl}" style="max-width: 100%; height: auto; border: 1px solid #ccc; border-radius: 4px;">
+              </div>
+            `;
+          } catch (e) { console.error(`Erro ao gerar gráfico de pizza (${tipo}) para o PDF`, e); }
+        }
+      }
+
+      containerPdf.innerHTML = htmlImagens;
+      document.body.removeChild(tempDiv);
+    }
+
+    // O setTimeout garante que o innerHTML acima foi inteiramente computado pelo navegador antes do script buscar a div #graficos-auto-pdf
+    setTimeout(gerarGraficosParaPDF, 100);
+  });
+
+  document.addEventListener("mousemove", function(e){
+    const img = e.target
+
+    if(img.classList.contains("imagem-madeira")){
+      const rect = img.getBoundingClientRect()
+      const x = (e.clientX - rect.left) / rect.width * 100
+      const y = (e.clientY - rect.top) / rect.height * 100
+
+      img.style.transformOrigin = x + "% " + y + "%"
+      img.style.transform = "scale(2.5)"
+    }
+  })
+
+  document.addEventListener("mouseleave", function(e){
+    const img = e.target
+
+    if(img.classList.contains("imagem-madeira")){
+      img.style.transform = "scale(1)"
+    }
+  }, true) 
+
+</script>

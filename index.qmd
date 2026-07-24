@@ -1,0 +1,56 @@
+---
+title: ""
+pagetitle: "Banco de Dados de Madeiras"
+page-layout: full
+toc: false
+body-classes: homepage
+---
+:::: {.container-texto}
+
+<div class="banner-full">
+  <img src="assets/imgs/banner.jpg" alt="Pica-Pau">
+</div>
+
+#### O Projeto
+
+Localizado no Instituto de Pesquisas Energéticas e Nucleares (IPEN), o Laboratório de Espectroscopia e Espectrometria das Radiações (LEER) realiza há alguns anos pesquisas de caracterização elementar de materiais pertencentes ao patrimônio Artístico e Cultural. Nesse sentido, o **Projeto Banco de Dados Madeiras** tem como objetivo armazenar informações técnicas de madeiras utilizadas em arte, possuindo fins de conservação e pesquisa científica. 
+
+:::: {.carousel}
+
+:::: {.carousel-item image="assets/imgs/image.jpeg" caption="Vilarejo, por Carlos Gomes"}
+:::
+
+:::: {.carousel-item image="assets/imgs/image5.jpeg" caption="Prédios, por Carlos Gomes"}
+:::
+
+:::: {.carousel-item image="assets/imgs/image4.jpeg" caption="Madeiras de Carlos Gomes"}
+:::
+
+:::
+
+#### Dados Técnicos
+
+O banco de dados possui estudos de caracterização elementar utilizando diferentes técnicas, como a Fluorescência de Raios - X (FRX) e a Análise por Ativação Neutrônica (AAN). Além disso, possui registro dos respectivos espectros e resultados das distribuições dos elementos em gráficos.
+
+<div class="bloco-imagem">
+  <p class="titulo-imagem">
+    Espectro de Fluorescência de Raios - X
+  </p>
+  <img src="assets/imgs/espectro.png" alt="Espectro de Fluorescência de Raios - X">
+  <p class="creditos-imagem">
+    Fonte: do autor
+  </p>
+</div>
+
+#### Público-Alvo
+
+O público-alvo são pesquisadores em conservação e restauro; artistas; estudantes de artes e química e todos que buscam um local centralizado para encontrar dados detalhados de caracterização elemental de madeiras artísticas.
+
+<div class="bloco-imagem">
+  <img src="assets/imgs/jennie-razumnaya-unsplash.jpg" alt="Pincéis em paleta">
+  <p class="creditos-imagem">
+    Foto de <a href="https://unsplash.com/pt-br/@jennie_ra?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Jennie Razumnaya</a> na <a href="https://unsplash.com/pt-br/fotografias/uma-bolsa-com-um-design-de-flores-rixN0q0IamQ?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+  </p>
+</div>
+
+:::

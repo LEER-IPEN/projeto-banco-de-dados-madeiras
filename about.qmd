@@ -1,0 +1,18 @@
+---
+title: ""
+pagetitle: "Sobre"
+page-layout: full
+toc: false
+---
+
+:::: {.container-texto}
+
+# Sobre
+
+O **Projeto Banco de Dados de Madeiras** foi desenvolvido no Laboratório de Espectroscopia e Espectrometria das Radiações - LEER nas instalações do Instituto de Pesquisas Energéticas e Nucleares - IPEN. E busca criar uma base de dados de madeiras artísticas contendo os dados de composição elementar, por meio da utilização da técnica de Fluorescência de Raios - X (FRX) e Análise por Ativação Neutrônica (AAN).
+
+A base de dados conta com buscas por nome de madeiras; cores; décadas; tipos de técnicas e medium utilizados. E os resultados contêm informações gerais da respectiva madeira, como nome, década e medium, assim como, dados analíticos qualitativos que apresentam os elementos majoritários e traços encontrados, junto de gráficos com as respectivas distribuições elementais.
+
+---
+
+::::
