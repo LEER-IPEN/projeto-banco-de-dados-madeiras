@@ -8,7 +8,7 @@ body-classes: homepage
 :::: {.container-texto}
 
 <div class="banner-full">
-  <img src="assets/imgs/banner.jpg" alt="Pica-Pau">
+  <img src="assets/imgs/banner.jpg" alt="Sagui">
 </div>
 
 #### O Projeto
@@ -17,13 +17,13 @@ Localizado no Instituto de Pesquisas Energéticas e Nucleares (IPEN), o Laborat�
 
 :::: {.carousel}
 
-:::: {.carousel-item image="assets/imgs/image.jpeg" caption="Vilarejo, por Carlos Gomes"}
+:::: {.carousel-item image="assets/imgs/discocompleto.jpeg" caption="Disco Completo"}
 :::
 
-:::: {.carousel-item image="assets/imgs/image5.jpeg" caption="Prédios, por Carlos Gomes"}
+:::: {.carousel-item image="assets/imgs/medidastransversais.jpeg" caption="Medidas Transversais"}
 :::
 
-:::: {.carousel-item image="assets/imgs/image4.jpeg" caption="Madeiras de Carlos Gomes"}
+:::: {.carousel-item image="assets/imgs/blococortado.jpeg" caption="Bloco Cortado"}
 :::
 
 :::
@@ -47,9 +47,9 @@ O banco de dados possui estudos de caracterização elementar utilizando diferen
 O público-alvo são pesquisadores em conservação e restauro; artistas; estudantes de artes e química e todos que buscam um local centralizado para encontrar dados detalhados de caracterização elemental de madeiras artísticas.
 
 <div class="bloco-imagem">
-  <img src="assets/imgs/jennie-razumnaya-unsplash.jpg" alt="Pincéis em paleta">
+  <img src="assets/imgs/jon-moore-_2MyZDsUSM4-unsplash.jpg" alt="Árvore">
   <p class="creditos-imagem">
-    Foto de <a href="https://unsplash.com/pt-br/@jennie_ra?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Jennie Razumnaya</a> na <a href="https://unsplash.com/pt-br/fotografias/uma-bolsa-com-um-design-de-flores-rixN0q0IamQ?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+    Foto de <a href="https://unsplash.com/pt-br/@thejmoore?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Jon Moore</a> na <a href="https://unsplash.com/pt-br/fotografias/fotografia-de-baixo-angulo-de-arvore-de-folhas-verdes-_2MyZDsUSM4?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
   </p>
 </div>
 

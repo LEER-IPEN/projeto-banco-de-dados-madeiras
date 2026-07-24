@@ -109,7 +109,7 @@
 .bloco-imagem {
   display: block;
   width: max-content; /* Faz com que a div tenha o tamanho exato da imagem */
-  max-width: 75%;     /* Define o limite de largura que você usava antes na imagem */
+  max-width: 65%;     /* Define o limite de largura que você usava antes na imagem */
   margin-left: auto;  /* Margens automáticas nas laterais */
   margin-right: auto; /* garantem a centralização do bloco na página */
   text-align: left;   /* Alinha o texto estritamente na borda esquerda da div (onde a foto começa) */
