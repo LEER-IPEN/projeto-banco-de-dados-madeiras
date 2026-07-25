@@ -1,15 +1,15 @@
 [
     {
         "id": "FRXM-0000",
-        "filename": "110626av - 180626av",
+        "filename": "110626av",
         "tecnica": {
             "sigla": "FRX",
             "nome": "Espectroscopia de Fluorescência de Raios X"
         },
         "nome": "Madeira Roxinho",
         "rotulo": "Madeira Roxinho",
-        "decada": "Peltogyne paniculata",
-        "medium": "-9,299/-62,977",
+        "decada": "-9,299/-62,977",
+        "medium": "Peltogyne paniculata",
         "elementos": {
             "Ag": {
                 "Majoritários": {
@@ -64,6 +64,180 @@
                     "Cr": 1639,
                     "Zn": 2815,
                     "As": 4177
+                }
+            }
+        },
+        "imagem": "dados/imagem-madeira/220725ab_agv.png",
+        "espectros": {
+            "Ag": "dados/espectros/frx/agv/220725ab_agv.png",
+            "Rh": "dados/espectros/frx/rhv/150725ab_rhv.png",
+            "Au": "dados/espectros/frx/auv/220725ab_auv.png"
+        }
+    },
+    {
+        "id": "FRXM-0001",
+        "filename": "020726ap 080726ap",
+        "tecnica": {
+            "sigla": "FRX",
+            "nome": "Espectroscopia de Fluorescência de Raios X"
+        },
+        "nome": "Madeira Cedrinho",
+        "rotulo": "Madeira Cedrinho",
+        "decada": "-8,616/-62,847",
+        "medium": "Erisma lanceolatum",
+        "elementos": {
+            "Ag": {
+                "Majoritários": {
+                    "K": 6305,
+                    "Ca": 40044,
+                    "Cr": 2522,
+                    "Mn": 21257,
+                    "Fe": 15474,
+                    "Co": 2303,
+                    "Ni": 2547
+                },
+                "Traço": {
+                    "P": 1340,
+                    "S": 892,
+                    "Cl": 1580,
+                    "Ti": 803,
+                    "Cu": 1086,
+                    "Zn": 1221,
+                    "As": 1032,
+                    "Se": 1268,
+                    "Sr": 840
+                }
+            },
+            "Rh": {
+                "Majoritários": {
+                    "Cl": 17052,
+                    "Ca": 105695,
+                    "Ti": 21231,
+                    "Cr": 9670,
+                    "Mn": 51494,
+                    "Fe": 48602,
+                    "Co": 11496,
+                    "Ni": 9395,
+                    "As": 5277
+                },
+                "Traço": {
+                    "P": 1675,
+                    "S": 1237,
+                    "K": 3744,
+                    "Cu": 3362,
+                    "Zn": 3386,
+                    "Ga": 3609,
+                    "Ge": 5056,
+                    "Se": 2786,
+                    "Br": 2840,
+                    "Sr": 1961
+                }
+            },
+            "Au": {
+                "Majoritários": {
+                    "K": 12995,
+                    "Ca": 76397,
+                    "Mn": 55329,
+                    "Fe": 22852,
+                    "Co": 9823,
+                    "Ga": 28407,
+                    "As": 11553,
+                    "Se": 12745
+                },
+                "Traço": {
+                    "P": 966,
+                    "Cl": 630,
+                    "Ti": 1435,
+                    "Cr": 2779,
+                    "Cu": 2931,
+                    "Ni": 6944,
+                    "Zn": 7770
+                }
+            }
+        },
+        "imagem": "dados/imagem-madeira/220725ab_agv.png",
+        "espectros": {
+            "Ag": "dados/espectros/frx/agv/220725ab_agv.png",
+            "Rh": "dados/espectros/frx/rhv/150725ab_rhv.png",
+            "Au": "dados/espectros/frx/auv/220725ab_auv.png"
+        }
+    },
+    {
+        "id": "FRXM-0002",
+        "filename": "020726bi 080726bi",
+        "tecnica": {
+            "sigla": "FRX",
+            "nome": "Espectroscopia de Fluorescência de Raios X"
+        },
+        "nome": "Madeira Játoba",
+        "rotulo": "Madeira Játoba",
+        "decada": "-11,8497/-61,2817",
+        "medium": "Hymenaea courbaril",
+        "elementos": {
+            "Ag": {
+                "Majoritários": {
+                    "K": 4565,
+                    "Ca": 83344,
+                    "Cr": 2308,
+                    "Mn": 4252,
+                    "Fe": 14140
+                },
+                "Traço": {
+                    "P": 1489,
+                    "S": 812,
+                    "Cl": 1318,
+                    "Ti": 645,
+                    "Cr": 2308,
+                    "Co": 2627, 
+                    "Ni": 2012,
+                    "Sr": 1416
+                }
+            },
+            "Rh": {
+                "Majoritários": {
+                    "Cl": 20228,
+                    "Ca": 197416,
+                    "Ti": 21209,
+                    "Cr": 11818,
+                    "Mn": 19756,
+                    "Fe": 54745,
+                    "Co": 15989,
+                    "Ni": 13712,
+                    "Cu": 8914,
+                    "Ge": 9950,
+                    "As": 9904
+                },
+                "Traço": {
+                    "P": 1076,
+                    "S": 973,
+                    "Zn": 8149,
+                    "Ga": 7902,
+                    "Se": 7145,
+                    "Br": 5016,
+                    "Rb": 2174,
+                    "Sr": 6732
+                }
+            },
+            "Au": {
+                "Majoritários": {
+                    "K": 11865,
+                    "Ca": 146798,
+                    "Mn": 13102,
+                    "Fe": 22906,
+                    "Co": 10585,
+                    "Ga": 24967,
+                    "As": 12072,
+                    "Se": 16873
+                },
+                "Traço": {
+                    "P": 1091,
+                    "Cl": 517,
+                    "Ti": 1529,
+                    "Cr": 1639,
+                    "Ni": 7707,
+                    "Cu": 3990,
+                    "Zn": 7372,
+                    "Sr": 2210
                 }
             }
         },
