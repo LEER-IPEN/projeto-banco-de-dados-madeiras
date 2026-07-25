@@ -176,8 +176,8 @@ document.addEventListener("DOMContentLoaded", function () {
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Medium</th>
-                  <th>Década</th>
+                  <th>Espécie</th>
+                  <th>Latitude/Longitude</th>
                   <th>Elementos Majoritários</th>
                   <th>Elementos Traço</th>
                 </tr>
