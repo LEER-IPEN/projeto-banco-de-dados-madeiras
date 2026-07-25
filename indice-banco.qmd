@@ -117,8 +117,8 @@ Além disso, as madeiras encontradas estão organizadas em cards e da seguinte m
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Medium</th>
-                  <th>Década</th>
+                  <th>Espécie</th>
+                  <th>Latitude/Longitude</th>
                   <th>Elementos Majoritários</th>
                   <th>Elementos Traço</th>
                 </tr>
